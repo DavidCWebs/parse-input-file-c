@@ -2,6 +2,7 @@
 
 Course *createCourse(char *title)
 {
+	printf("DEBUG: title: %s\n", title);
 	Course *c = malloc(sizeof(Course));
 	c->title = malloc(strlen(title) + 1);
 	strcpy(c->title, title);

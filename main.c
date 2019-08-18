@@ -1,6 +1,11 @@
 #include <stdio.h>
 #include "course.h"
 
+int courseExists(const char *courseTitle)
+{
+	printf("Checking %s\n", courseTitle);
+	return 0;
+}
 
 int main(int argc, char **argv)
 {
@@ -13,17 +18,50 @@ int main(int argc, char **argv)
 	FILE *fp = fopen(argv[1], "r");
 	char *lineBuf = NULL;
 	size_t n = 0;
-//	ssize_t lineLength = 0;
-//	lineLength = getline(&lineBuf, &n, fp);
+	ssize_t length = 0;
 	getline(&lineBuf, &n, fp);
-
 	int nStudents = atoi(lineBuf);
-	for (int i = 0; i < nStudents; i++) {
-		printf("%d\n", i);
-	}
 	
+	Course **courses = NULL;
+	size_t nCoursePtrs = 0;
+
+	for (int i = 0; i < nStudents; i++) {
+		length = getline(&lineBuf, &n, fp);
+		char *student = calloc(sizeof(student) * length, sizeof(char));
+		strncpy(student, lineBuf, length - 1); // Remove final '\n'
+
+		getline(&lineBuf, &n, fp);
+		int nCourses = atoi(lineBuf);
+		
+		for (int j = 0; j < nCourses; j++) {
+			length = getline(&lineBuf, &n, fp);
+			char *courseTitle = calloc(sizeof(courseTitle) * length, sizeof(*courseTitle));
+			strncpy(courseTitle, lineBuf, length - 1);
+			if (courseExists(courseTitle)) {
+				
+			} else {
+				printf("DEBUG: nCoursePtrs = %lu\n", nCoursePtrs);
+				// Create course
+				Course **tmp = realloc(courses, ++nCoursePtrs * sizeof(*courses));
+				if (!tmp) {
+					fprintf(stderr, "realloc failed for courses.\n");
+					exit(1);
+				}
+				courses = tmp;
+				courses[nCoursePtrs - 1] = createCourse(courseTitle);
+
+				// Add student
+			}
+			free(courseTitle);
+		}
+		free(student);
+	}
 	free(lineBuf);
 	fclose(fp);
+	for (size_t i = 0; i < nCoursePtrs; i++) {
+		deleteCourse(courses[i]);
+	}
+	free(courses);
 
 
 //	Course **courses = NULL;
