@@ -2,7 +2,6 @@
 
 Course *createCourse(char *title)
 {
-	printf("DEBUG: title: %s\n", title);
 	Course *c = malloc(sizeof(Course));
 	c->title = malloc(strlen(title) + 1);
 	strcpy(c->title, title);
@@ -29,7 +28,7 @@ void deleteCourse(Course *c)
 {
 	free(c->title);
 	for (size_t i = 0; i < c->nStudents; i++) {
-		printf("deleting student %s\n", c->students[i]);
+//		printf("deleting student %s\n", c->students[i]);
 		free(*(c->students + i));
 	}
 	free(c->students);
